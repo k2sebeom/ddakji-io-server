@@ -1,15 +1,16 @@
-import { Socket } from 'socket.io';
 import { v1 } from 'uuid';
+import { Player } from './Player';
+
 
 type Match = {
     uuid: string;
-    client1: Socket;
-    client2: Socket;
+    player1: Player;
+    player2: Player;
 }
 
 
 class MatchQueue {
-    private queue: Socket[];
+    private queue: Player[];
     private matches: Match[];
 
     constructor() {
@@ -17,20 +18,20 @@ class MatchQueue {
         this.matches = [];
     }
 
-    public push(socket: Socket): void {
-        this.queue.push(socket);
+    public push(player: Player): void {
+        this.queue.push(player);
     }
 
     public checkMatch(): Match[] {
         let newMatches: Match[] = [];
 
         while(this.queue.length > 1) {
-            const client1: Socket = this.queue.pop();
-            const client2: Socket = this.queue.pop();
+            const player1: Player = this.queue.pop();
+            const player2: Player = this.queue.pop();
             const game_id = v1();
-            client1.join('game_' + game_id);
-            client2.join('game_' + game_id);
-            const newMatch = { uuid: game_id, client1, client2 };
+            player1.socket.join('game_' + game_id);
+            player2.socket.join('game_' + game_id);
+            const newMatch = { uuid: game_id, player1, player2 };
             this.matches.push(newMatch);
             newMatches.push(newMatch);
         }
