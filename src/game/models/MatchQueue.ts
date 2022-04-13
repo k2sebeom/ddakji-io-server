@@ -6,6 +6,7 @@ type Match = {
     uuid: string;
     player1: Player;
     player2: Player;
+    turnId: string;
 }
 
 
@@ -31,7 +32,7 @@ class MatchQueue {
             const game_id = v1();
             player1.socket.join('game_' + game_id);
             player2.socket.join('game_' + game_id);
-            const newMatch = { uuid: game_id, player1, player2 };
+            const newMatch = { uuid: game_id, player1, player2, turnId: player1.id };
             this.matches.push(newMatch);
             newMatches.push(newMatch);
         }
@@ -39,4 +40,7 @@ class MatchQueue {
     }
 }
 
-export default MatchQueue;
+export {
+    MatchQueue,
+    Match
+}

@@ -1,6 +1,7 @@
 import { Server, Socket } from 'socket.io';
-import MatchQueue from '../models/MatchQueue';
+import { Match, MatchQueue } from '../models/MatchQueue';
 import { Player } from '../models/Player';
+import MatchHandler from '../handlers/MatchHandler';
 
 
 type JoinData = {
@@ -11,11 +12,25 @@ type JoinData = {
 class QueueHandler {
     public matchQueue: MatchQueue = new MatchQueue();
 
-    constructor(server: Server) {
+    constructor(onMatchMade: {(matches: Match[]): void}) {
         setInterval(() => {
             const newMatches = this.matchQueue.checkMatch();
             for(const m of newMatches) {
-                server.to('game_' + m.uuid).emit('evt');
+                m.player1.socket.emit('recMatch', {
+                    rival: {
+                        nickname: m.player2.nickname,
+                        d_id: m.player2.d_id
+                    }
+                });
+                m.player2.socket.emit('recMatch', {
+                    rival: {
+                        nickname: m.player1.nickname,
+                        d_id: m.player1.d_id
+                    }
+                });
+            }
+            if(newMatches.length > 0) {
+                onMatchMade(newMatches);
             }
         }, 1000);
     }

@@ -2,6 +2,7 @@ import { Server, Socket } from 'socket.io';
 import * as http from 'http';
 
 import QueueHandler from './handlers/QueueHandler';
+import MatchHandler from './handlers/MatchHandler';
 
 
 const startGameServer = (server: http.Server) => {
@@ -13,11 +14,16 @@ const startGameServer = (server: http.Server) => {
     };
 
     const io = new Server(server, options);
-    
-    const queueHandler = new QueueHandler(io);
+
+    const matchHandler = new MatchHandler(io);
+    const queueHandler = new QueueHandler((matches) => {
+        for(const m of matches) {
+            matchHandler.register(m);
+        }
+    });
 
     io.on('connection', (socket: Socket) => {
-        console.log("New connection");
+        console.log("New connection " + socket.id);
 
         queueHandler.register(socket);
 
