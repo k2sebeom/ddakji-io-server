@@ -1,12 +1,17 @@
-import * as express from 'express';
 import { Server, Socket } from 'socket.io';
 import * as http from 'http';
-import { match } from 'assert';
-import e = require('express');
+import MatchQueue from './models/MatchQueue';
 
 
 const startGameServer = (server: http.Server) => {
-    let matchQueue: Socket[] = [];
+    let matchQueue: MatchQueue = new MatchQueue();
+
+    setInterval(() => {
+        const newMatches = matchQueue.checkMatch();
+        for(const m of newMatches) {
+            io.to('game_' + m.uuid).emit('evt');
+        }
+    }, 1000);
 
     const options: object = {
         cors: {
@@ -26,16 +31,8 @@ const startGameServer = (server: http.Server) => {
 
         socket.on('reqQueue', (data) => {
             console.log("Adding to queue...");
-            matchQueue.push(socket);
-            console.log(matchQueue);
-
-            if (matchQueue.length > 1) {
-                const client1: Socket = matchQueue.pop();
-                const client2: Socket = matchQueue.pop();
-                client1.join('game');
-                client2.join('game');
-                io.to('game').emit('evt');
-            }
+            // Push socket to a match queue and check if new matches are made
+            matchQueue.push(socket);    
         });
     });
 }
