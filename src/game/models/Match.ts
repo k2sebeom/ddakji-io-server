@@ -2,7 +2,7 @@ import { v1 } from 'uuid';
 import { Player } from './Player';
 
 
-type Match = {
+class Match {
     uuid: string;
     player1: Player;
     player2: Player;
@@ -11,8 +11,8 @@ type Match = {
 
 
 class MatchQueue {
-    private queue: Player[];
-    private matches: Match[];
+    public queue: Player[];
+    public matches: Match[];
 
     constructor() {
         this.queue = [];
@@ -32,7 +32,7 @@ class MatchQueue {
             const game_id = v1();
             player1.socket.join('game_' + game_id);
             player2.socket.join('game_' + game_id);
-            const newMatch = { uuid: game_id, player1, player2, turnId: player1.id };
+            const newMatch: Match = { uuid: game_id, player1, player2, turnId: player1.id };
             this.matches.push(newMatch);
             newMatches.push(newMatch);
         }

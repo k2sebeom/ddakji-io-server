@@ -2,8 +2,7 @@ import * as express from 'express';
 import config from './config';
 
 import loaders from './loaders';
-import startGameServer from './game';
-import { start } from 'repl';
+import { GameServer } from './game';
 
 
 async function runServer() {
@@ -19,7 +18,12 @@ async function runServer() {
         `);
     });
 
-    startGameServer(server);
+    const gameServer = new GameServer(server, {
+        cors: {
+            methods: ["GET", "POST"],
+            origin: "*"
+        }
+    })
 }
 
 runServer();

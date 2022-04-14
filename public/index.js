@@ -1,4 +1,6 @@
 const btn = document.querySelector('#play-btn');
+const nameInput = document.querySelector("#nickname-input");
+
 
 btn.onclick = () => {
     const client = io.connect('http://localhost:4000');
@@ -9,6 +11,6 @@ btn.onclick = () => {
 
     client.emit('reqQueue', {
         d_id: 0,
-        nickname: "asdS"
+        nickname: nameInput.value
     })
 }

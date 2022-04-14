@@ -5,33 +5,32 @@ import QueueHandler from './handlers/QueueHandler';
 import MatchHandler from './handlers/MatchHandler';
 
 
-const startGameServer = (server: http.Server) => {
-    const options: object = {
-        cors: {
-            methods: ["GET", "POST"],
-            origin: "*"
-        }
-    };
+class GameServer {
+    public io: Server;
+    public queueHandler: QueueHandler;
+    public matchHandler: MatchHandler;
 
-    const io = new Server(server, options);
+    constructor(server: http.Server, options: object) {
+        // Initialize socket.io server
+        this.io = new Server(server, options);
 
-    const matchHandler = new MatchHandler(io);
-    const queueHandler = new QueueHandler((matches) => {
-        for(const m of matches) {
-            matchHandler.register(m);
-        }
-    });
+        // Setup Handlers
+        this.matchHandler = new MatchHandler(this.io);
+        this.queueHandler = new QueueHandler(this);
 
-    io.on('connection', (socket: Socket) => {
-        console.log("New connection " + socket.id);
-
-        queueHandler.register(socket);
-
-        socket.on('disconnect', () => {
-            console.log("Disconnected");
+        // On connection
+        this.io.on('connection', (socket: Socket) => {
+            console.log("New connection " + socket.id);
+    
+            this.queueHandler.register(socket);
+    
+            socket.on('disconnect', () => {
+                console.log("Disconnected");
+            });
         });
-    });
+    }
 }
 
-
-export default startGameServer;
+export {
+    GameServer
+}

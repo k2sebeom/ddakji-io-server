@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
-import { Match } from '../models/MatchQueue';
-
+import { Match } from '../models/Match';
+import IHandler from './IHandler';
 
 class MatchHandler {
     private server: Server;

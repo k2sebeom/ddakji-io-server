@@ -1,7 +1,9 @@
 import { Server, Socket } from 'socket.io';
-import { Match, MatchQueue } from '../models/MatchQueue';
+import { Match, MatchQueue } from '../models/Match';
 import { Player } from '../models/Player';
 import MatchHandler from '../handlers/MatchHandler';
+import IHandler from './IHandler';
+import { GameServer } from '..';
 
 
 type JoinData = {
@@ -9,10 +11,12 @@ type JoinData = {
     nickname: string;
 }
 
-class QueueHandler {
+class QueueHandler implements IHandler {
+    public gameServer: GameServer;
     public matchQueue: MatchQueue = new MatchQueue();
 
-    constructor(onMatchMade: {(matches: Match[]): void}) {
+    constructor(gameServer: GameServer) {
+        this.gameServer = gameServer;
         setInterval(() => {
             const newMatches = this.matchQueue.checkMatch();
             for(const m of newMatches) {
@@ -30,7 +34,9 @@ class QueueHandler {
                 });
             }
             if(newMatches.length > 0) {
-                onMatchMade(newMatches);
+                for(const m of newMatches) {
+                    this.gameServer.matchHandler.register(m);
+                }
             }
         }, 1000);
     }
