@@ -8,5 +8,24 @@
 }
 
 .arena {
+    width: 400px;
+    height: 400px;
+    background-color: gray;
+    border: solid 2px black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#board {
+    width: 200px;
+    height: 200px;
+    background-color: aliceblue;
+    border: solid 1px black;
     
+}
+
+#lineup {
+    display: flex;
+    flex-direction: row;
 }
