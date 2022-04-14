@@ -50,6 +50,22 @@ btn.onclick = () => {
         
         $('#lineup').append(card1);
         $('#lineup').append(card2);
+
+        document.querySelector('#board').onmouseup = (e) => {
+            const board = $('#board');
+            let x = e.clientX - board.offset().left;
+            let y = e.clientY - board.offset().top;
+            client.emit('reqAttack', {
+                x: x / 200,
+                y: y / 200,
+                p: 20
+            })
+            console.log(x / 200, y / 200);
+        }
+
+        client.on('recAttackResult', (data) => {
+            console.log(`Attack result ${data.result}`);
+        })
     });
 
     client.emit('reqQueue', {
