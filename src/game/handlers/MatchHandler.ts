@@ -1,22 +1,24 @@
-import { Server, Socket } from 'socket.io';
+import { Socket } from 'socket.io';
+import { GameServer } from '../GameServer';
 import { Match } from '../models/Match';
 import IHandler from './IHandler';
 
-class MatchHandler {
-    private server: Server;
+class MatchHandler implements IHandler {
+    public gameServer: GameServer;
 
-    constructor(server: Server) {
-        this.server = server;
+    constructor(gameServer: GameServer) {
+        this.gameServer = gameServer;
     }
 
-    public register(match: Match): void {
-        match.player1.socket.on('reqAttack', (data) => {
-            console.log(match);
+    public register(socket: Socket): void {
+        socket.on('reqAttack', (data) => {
+            const player = this.gameServer.activePlayers.get(socket.id);
+            const match = player.match;
+            console.log(match.uuid);
+            console.log('fighting with ' + match.player2.nickname);
         });
-        match.player2.socket.on('reqAttack', (data) => {
-            if(match.turnId == match.player2.id) {
-                // DO calculation and return recAttackResult
-            }
+        socket.on('reqAttack', (data) => {
+            
         })
     }
 }

@@ -1,4 +1,5 @@
 import { Socket } from 'socket.io';
+import { Match } from './Match';
 
 
 class Player {
@@ -6,6 +7,7 @@ class Player {
     public d_id: number;
     public nickname: string;
     public socket: Socket;
+    public match?: Match;
 
     constructor(d_id: number, nickname: string, socket: Socket) {
         this.id = socket.id;

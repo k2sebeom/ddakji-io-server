@@ -7,6 +7,7 @@ btn.onclick = () => {
 
     client.on('recMatch', (data) => {
         console.log(data.rival);
+        client.emit('reqAttack');
     });
 
     client.emit('reqQueue', {

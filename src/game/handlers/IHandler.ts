@@ -1,4 +1,4 @@
-import { GameServer } from '../index';
+import { GameServer } from '../GameServer';
 import { Socket } from 'socket.io';
 
 interface IHandler {

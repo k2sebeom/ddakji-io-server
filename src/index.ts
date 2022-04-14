@@ -2,7 +2,7 @@ import * as express from 'express';
 import config from './config';
 
 import loaders from './loaders';
-import { GameServer } from './game';
+import { GameServer } from './game/GameServer';
 
 
 async function runServer() {
