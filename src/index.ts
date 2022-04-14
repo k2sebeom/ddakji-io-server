@@ -4,6 +4,8 @@ import config from './config';
 import loaders from './loaders';
 import { GameServer } from './game/GameServer';
 
+import Ddakji from  './game/models/Ddakji';
+import Vector from './game/models/utils/Vector';
 
 async function runServer() {
     const app = express();
@@ -23,7 +25,7 @@ async function runServer() {
             methods: ["GET", "POST"],
             origin: "*"
         }
-    })
+    });
 }
 
 runServer();
