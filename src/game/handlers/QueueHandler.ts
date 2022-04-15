@@ -22,7 +22,8 @@ class QueueHandler implements IHandler {
     }
 
     public register(socket: Socket) {
-        socket.on('reqQueue', (data: JoinData) => {
+        socket.on('reqQueue', (msg) => {
+            const data: JoinData = JSON.parse(msg); 
             console.log("Adding to queue..." + data.nickname);
             // Push socket to a match queue and check if new matches are made
             const player = new Player(data.d_id, data.nickname, socket);
