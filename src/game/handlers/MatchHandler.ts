@@ -13,7 +13,8 @@ class MatchHandler implements IHandler {
     }
 
     public register(socket: Socket): void {
-        socket.on('reqAttack', (data) => {
+        socket.on('reqAttack', (msg) => {
+            const data = JSON.parse(msg);
             const player = this.gameServer.activePlayers.get(socket.id);
             const match = player.match;
 
@@ -22,8 +23,10 @@ class MatchHandler implements IHandler {
                 return;
             }
             const other = match.player1.id == player.id ? match.player2 : match.player1;
-            const result = player.ddakji.attack(other.ddakji, new Vector(data.x, data.y));
-            this.gameServer.io.to('game_' + match.uuid).emit('recAttackResult', { result });
+            const packet = player.ddakji.attack(other.ddakji, new Vector(data.x, data.y));
+            console.log(msg);
+            console.log(packet);
+            this.gameServer.io.to('game_' + match.uuid).emit('recAttackResult', packet);
             match.turnId = other.id;
         });
     }

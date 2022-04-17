@@ -44,13 +44,16 @@ class MatchQueue {
                 rival: {
                     nickname: player2.nickname,
                     d_id: player2.ddakji.id
-                }
+                },
+                isFirst: true
             });
+            console.log(player1.nickname);
             player2.socket.emit('recMatch', {
                 rival: {
                     nickname: player1.nickname,
                     d_id: player1.ddakji.id
-                }
+                },
+                isFirst: false
             });
             
             const newMatch: Match = new Match(game_id, player1, player2);
